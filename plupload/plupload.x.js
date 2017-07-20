@@ -25,7 +25,7 @@ jQuery.uploads = function(options) {
         multi_selection:options.multi_selection?options.multi_selection:true,                         // 是否允许选择多个文件                  true   (bool)                Optional
         processing:options.processing?options.processing:true,                                        // 是否自动上传                        true    (bool)                Optional
         start_id:options.start_id?options.start_id:'start_upload_btn',                                // 绑定开始上传按钮的元素                start_upload_btn (string dom) Optional 如果不自动上传必须填写开始上传按钮元素
-        max_file_size:options.max_file_size?options.max_file_size:'400kb',                            // 文件最大支持
+        max_file_size:options.max_file_size?options.max_file_size:'400kb',                            // 100b, 10kb, 10mb, 1gb    最大只能上传1mb的文件
         success:function (responseObject) {},
         errors:function (errObject) {},
         progress:function (file) {},
@@ -76,6 +76,18 @@ jQuery.uploads = function(options) {
         // 当上传队列中所有文件都上传完成后触发监听函数参数：(uploader,files 数组 选择的文件)
         // console.log('全部上传完毕');return;
         return sets.complete.call(this,files);
+    });
+    uploaders.bind('UploadFile',function (uploader,file) {
+        // 当上传队列中某一个文件开始上传后触发监听函数参数：(uploader,file)
+        console.log('正在上传');return;
+    });
+    uploaders.bind('BeforeUpload',function (uploader,file) {
+        // 当队列中的某一个文件正要开始上传前触发监听函数参数：(uploader,file)
+        //console.log('准备上传');return;
+    });
+    uploaders.bind('StateChanged',function (uploader) {
+        // 当上传队列的状态发生改变时触发监听函数参数：(uploader)
+        //console.log('准备上传');return;
     });
     uploaders.bind('Error',function (uploader,errObject) {
         // 当发生错误时触发监听函数参数：(uploader,errObject)
