@@ -26,10 +26,11 @@ jQuery.uploads = function(options) {
         processing:options.processing?options.processing:true,                                        // 是否自动上传                        true    (bool)                Optional
         start_id:options.start_id?options.start_id:'start_upload_btn',                                // 绑定开始上传按钮的元素                start_upload_btn (string dom) Optional 如果不自动上传必须填写开始上传按钮元素
         max_file_size:options.max_file_size?options.max_file_size:'400kb',                            // 100b, 10kb, 10mb, 1gb    最大只能上传1mb的文件
-        success:function (responseObject) {},
+        success:function (file,response) {},
         errors:function (errObject) {},
         progress:function (file) {},
-        complete:function (files) {}
+        complete:function (files) {},
+        filesadded:function (files) {}
     };
     /**********************************配置上传参数****************************************************************/
     var uploaders = new plupload.Uploader({
@@ -55,10 +56,15 @@ jQuery.uploads = function(options) {
     uploaders.bind('FilesAdded',function(uploader,files){
         //当文件添加到上传队列后触发监听函数参数：(uploader,files)
         // 判断是否选取好文件自动上传
-        if( params.processing){
-            uploader.start(); //调用实例对象的start()方法开始上传文件，当然你也可以在其他地方调用该方法
+        if( options.filesadded == undefined ){
+            if( params.processing){
+                uploader.start(); //调用实例对象的start()方法开始上传文件，当然你也可以在其他地方调用该方法
+                return;
+            }
+        }else{
+            uploader.start();
+            return sets.filesadded.call(this,files);
         }
-        return;
     });
     uploaders.bind('UploadProgress',function(uploader,file){
         //会在文件上传过程中不断触发，可以用此事件来显示上传进度监听函数参数：(uploader,file)
@@ -70,7 +76,7 @@ jQuery.uploads = function(options) {
         console.log("单独文件上传完毕");
         var response = $.parseJSON(responseObject.response);
         // var servers_ret = eval('(' + responseObject.response + ')');
-        return sets.success.call(this,response);
+        return sets.success.call(this,file,response);
     });
     uploaders.bind('UploadComplete',function (uploader,files) {
         // 当上传队列中所有文件都上传完成后触发监听函数参数：(uploader,files 数组 选择的文件)

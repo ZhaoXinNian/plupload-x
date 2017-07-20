@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>上传文件</title>
     <style>
+        *{ margin:0px; padding:0px; font-family:Microsoft Yahei; box-sizing:border-box; -webkit-box-sizing:border-box;}
         .report-file {
             display: block;
             position: relative;
@@ -34,6 +35,17 @@
             filter: alpha(opacity=0);
             cursor: pointer;
         }
+
+        .demo{max-width:640px; margin:0 auto; min-width:320px;}
+        .ul_pics{ float:left;}
+        .ul_pics li{float:left; margin:0px; padding:0px; margin-left:5px; margin-top:5px; position:relative; list-style-type:none; border:1px solid #eee; width:80px; height:80px;}
+        .ul_pics li img{width:80px;height:80px;}
+        .ul_pics li i{ position:absolute; top:0px; right:-1px; background:red; cursor:pointer; font-style:normal; font-size:10px; width:14px; height:14px; text-align:center; line-height:12px; color:#fff;}
+        .progress{position:relative; margin-top:30px; background:#eee;}
+        .bar {background-color: green; display:block; width:0%; height:15px; }
+        .percent{position:absolute; height:15px; top:-18px; text-align:center; display:inline-block; left:0px; width:80px; color:#666; line-height:15px; font-size:12px; }
+        .demo #btn{ width:80px; height:80px; margin-left:5px; margin-top:5px; border:1px dotted #c2c2c2; background: #d3d3d3 no-repeat center; background-size:30px auto; text-align:center; line-height:120px; font-size:30px; color:#666; float:left;}
+
     </style>
     <script src="http://cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
     <!--[if lt IE 9]>
@@ -46,23 +58,20 @@
 <div class="report-file">
     <span>上传文件…</span><input tabindex="3" size="3" id="file" name="file" class="file-prew" type="file">
 </div>
-<div>
-    <p id="fileName"></p>
-    <img id="spic" src="" style="margin-top:10px;display: none;"/>
-</div>
+<div class="demo">
 
-<script>
+    <ul id="ul_pics" class="ul_pics clearfix"></ul>
+</div>
+    <script>
     $.uploads({
         id:'file',
         url:'upload.php',
         extensions:[ {title : 'Image&Zip files', extensions : 'jpg,png,gif,zip,z7,rar'}],
-        success:function(response){
+        success:function(file,response){
             console.log('上传成功 并回调回来');
             if(response.status){
                 var files = response.files;
-                $("#simage").val(files);
-                $('#spic').slideDown('slow').attr({'src':files});
-                $('#fileName').html('').html(files);
+                $("#" + file.id).html("<img src='" + files + "'/><i onclick='delimg($(this))'>x</i><input type='hidden' name='' value='"+ files +"'>");
                 console.log(response.msg);
             }else{
                 console.log(response.msg);
@@ -71,10 +80,22 @@
         errors:function (errObject) {},
         progress:function (file) {
             console.log(file.percent);
-            //layer.msg("上传进度为：" + file.percent + "%");
+            console.log(file.id);
+            var percent = file.percent;
+            $("#" + file.id).find('.bar').css({"width": percent + "%"});
+            $("#" + file.id).find(".percent").text("上传中 "+percent + "%");
+        },
+        filesadded:function (files) {
+            var li = '';
+            plupload.each(files, function(file) { //遍历文件
+                li += "<li id='" + file['id'] + "'><div class='progress'><span class='bar'></span><span class='percent'>上传中 0%</span></div></li>";
+            });
+            $("#ul_pics").append(li);
         }
     });
-
+function delimg(option) {
+    option.parent().remove();
+}
 </script>
 </body>
 </html>
