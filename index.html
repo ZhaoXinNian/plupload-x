@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>上传文件</title>
+    <style>
+        .report-file {
+            display: block;
+            position: relative;
+            width: 120px;
+            height: 28px;
+            overflow: hidden;
+            border: 1px solid #428bca;
+            background: none repeat scroll 0 0 #428bca;
+            color: #fff;
+            cursor: pointer;
+            text-align: center;
+            float: left;
+            margin-right:5px;
+        }
+        .report-file span {
+            cursor: pointer;
+            display: block;
+            line-height: 28px;
+        }
+        .file-prew {
+            position: absolute;
+            top: 0;
+            left:0;
+            width: 120px;
+            height: 30px;
+            font-size: 100px;
+            opacity: 0;
+            filter: alpha(opacity=0);
+            cursor: pointer;
+        }
+    </style>
+    <script src="http://cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+    <!--[if lt IE 9]>
+    <script src="http://cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="http://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <script src="plupload/plupload.x.js"></script>
+</head>
+<body>
+<div class="report-file">
+    <span>上传文件…</span><input tabindex="3" size="3" id="file" name="file" class="file-prew" type="file">
+</div>
+<div>
+    <p id="fileName"></p>
+    <img id="spic" src="" style="margin-top:10px;display: none;"/>
+</div>
+
+<script>
+    $.uploads({
+        id:'file',
+        url:'upload.php',
+        extensions:[ {title : 'Image&Zip files', extensions : 'jpg,png,gif,zip,z7,rar'}],
+        success:function(response){
+            console.log('上传成功 并回调回来');
+            if(response.status){
+                var files = response.files;
+                $("#simage").val(files);
+                $('#spic').slideDown('slow').attr({'src':files});
+                $('#fileName').html('').html(files);
+                console.log(response.msg);
+            }else{
+                console.log(response.msg);
+            }
+        },
+        errors:function (errObject) {},
+        progress:function (file) {
+            console.log(file.percent);
+            //layer.msg("上传进度为：" + file.percent + "%");
+        }
+    });
+
+</script>
+</body>
+</html>
