@@ -1,5 +1,5 @@
 /*
-中午文档
+中文文档
 http://www.phpin.net/tools/plupload/
 */
 // new_element=document.createElement("script");

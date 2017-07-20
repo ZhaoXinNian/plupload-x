@@ -1,6 +1,7 @@
 # 简单封装 Plupload 上传插件，调用更简单
 
-该插件需依赖 [jQuery](//jquery.com) 先自行引入jquery包:
+该插件需依赖 [jQuery](//jquery.com) 先自行引入jquery包。
+
 
 
 ## Demo
@@ -23,4 +24,5 @@
 ```
 
 ## - _- 
- 可扩展自己的处理事务，有不足之处请谅解！
+plupload [中文文档](http://www.phpin.net/tools/plupload/) 可根据业务需求扩展
+######### 刚开始练练手。。。
